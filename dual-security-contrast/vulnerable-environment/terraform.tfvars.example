@@ -1,0 +1,183 @@
+# ========================================
+# AMBIENTE VULNERABLE - CONFIGURACIÓN
+# ⚠️  ADVERTENCIA: ESTE AMBIENTE ES DELIBERADAMENTE INSEGURO
+# ========================================
+
+# ========================================
+# ACKNOWLEDGMENT - REQUERIDO
+# ========================================
+acknowledge_insecure_deployment = true
+demo_disclaimer_accepted = true
+
+# ========================================
+# OCI AUTHENTICATION
+# ========================================
+tenancy_ocid     = "ocid1.tenancy.oc1..example"
+user_ocid        = "ocid1.user.oc1..example"
+fingerprint      = "xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx"
+private_key_path = "/home/jesmonsa/.oci/oci_api_key.pem"
+
+# ========================================
+# REGIONAL CONFIGURATION
+# ========================================
+region = "us-ashburn-1"
+
+# ========================================
+# ENVIRONMENT CONFIGURATION
+# ========================================
+environment = "vulnerable"
+
+# ========================================
+# NETWORK CONFIGURATION - INSEGURA
+# ========================================
+vcn_cidr_block = "10.50.0.0/16"  # Rango diferente para evitar conflictos
+
+# ========================================
+# COMPUTE CONFIGURATION - DESPROTEGIDO
+# ========================================
+instance_shape = "VM.Standard.E4.Flex"
+instance_count = 2
+
+# ========================================
+# DATABASE CONFIGURATION - ORACLE 23ai VULNERABLE
+# ========================================
+db_admin_password = "Welcome123!"  # ⚠️  PASSWORD DÉBIL INTENCIONAL
+enable_public_database_access = true  # ⚠️  CRÍTICO: Base de datos pública
+
+# ========================================
+# VULNERABILITY SETTINGS - PARA DEMO
+# ========================================
+install_vulnerable_software = true    # Instala software con vulnerabilidades conocidas
+enable_weak_ssl_ciphers = true       # Habilita cifrados SSL débiles
+disable_os_updates = true            # ⚠️  Deshabilita actualizaciones de seguridad
+
+# ========================================
+# MONITORING - MÍNIMO
+# ========================================
+enable_basic_logging = true          # Solo logging básico
+disable_security_monitoring = true   # ⚠️  Sin monitoreo de seguridad
+
+# ========================================
+# DEMO CONFIGURATION
+# ========================================
+demo_mode = true                     # Habilita vulnerabilidades adicionales para demo
+
+# ========================================
+# COST OPTIMIZATION (OPCIONAL)
+# ========================================
+use_always_free_resources = false   # Cambiar a true para usar recursos Always Free
+
+# ========================================
+# 🚨 ADVERTENCIAS CRÍTICAS DE SEGURIDAD 🚨
+# ========================================
+
+# Esta configuración implementa DELIBERADAMENTE las siguientes VULNERABILIDADES:
+
+# 1. 🔐 IAM INSEGURO:
+#    ❌ Todos los usuarios con permisos de administrador
+#    ❌ Sin separación de compartments
+#    ❌ Credenciales sin rotación
+#    ❌ Sin MFA obligatorio
+
+# 2. 🌐 RED COMPLETAMENTE EXPUESTA:
+#    ❌ Base de datos en subnet pública (CRÍTICO)
+#    ❌ Puerto Oracle 1521 abierto a internet
+#    ❌ Security Lists permiten 0.0.0.0/0
+#    ❌ Sin WAF, sin protección DDoS
+#    ❌ Sin Flow Logs para monitoreo
+
+# 3. 💻 COMPUTE SIN PROTECCIÓN:
+#    ❌ SSH con password habilitado
+#    ❌ Sin hardening de OS
+#    ❌ Software vulnerable instalado
+#    ❌ Sin cifrado de volúmenes
+#    ❌ Sin Vulnerability Scanning
+
+# 4. 🗄️  ORACLE 23ai SIN PROTECCIONES:
+#    ❌ Database Firewall DESHABILITADO
+#    ❌ Data Safe DESHABILITADO
+#    ❌ Password débil (Welcome123!)
+#    ❌ Acceso público directo
+#    ❌ Sin cifrado con customer keys
+#    ❌ Backups sin cifrado adicional
+
+# 5. 📱 APLICACIÓN VULNERABLE:
+#    ❌ Vulnerabilidades OWASP Top 10
+#    ❌ SQL Injection habilitado
+#    ❌ XSS sin protección
+#    ❌ Path Traversal permitido
+#    ❌ Secretos hardcodeados
+
+# 6. 📊 MONITOREO DESHABILITADO:
+#    ❌ Cloud Guard desactivado
+#    ❌ Sin alertas de seguridad
+#    ❌ Audit logging mínimo
+#    ❌ Sin SIEM integration
+
+# ========================================
+# CASOS DE USO AUTORIZADOS
+# ========================================
+
+# ✅ USOS PERMITIDOS:
+# - Demos de seguridad autorizadas
+# - Training de equipos de seguridad
+# - Penetration testing controlado
+# - Comparación con ambiente seguro
+# - Educación sobre vulnerabilidades
+
+# ❌ USOS PROHIBIDOS:
+# - NUNCA en producción
+# - NUNCA con datos reales
+# - NUNCA sin supervisión de seguridad
+# - NUNCA en redes corporativas sin aislamiento
+
+# ========================================
+# IMPACTO FINANCIERO ESTIMADO
+# ========================================
+
+# 💰 COSTO DE VIOLACIÓN CON ESTAS VULNERABILIDADES:
+# - Costo promedio: $4.45 millones USD
+# - Tiempo de detección: 287 días promedio
+# - Pérdida de clientes: 65% promedio
+# - Multas regulatorias: $10M+ USD potencial
+# - Downtime: 72 horas promedio
+
+# 💡 COSTO DEL AMBIENTE VULNERABLE:
+# - Costo mensual: ~$300 USD
+# - Propósito: Demostrar vulnerabilidades
+# - Tiempo de vida: Solo durante demos
+# - ROI: Educacional - prevención de incidentes reales
+
+# ========================================
+# TIMELINE DE DEPLOYMENT
+# ========================================
+
+# ⏱️  TIEMPO ESTIMADO: 45-60 minutos
+# - IAM inseguro: 5 minutos
+# - Red expuesta: 10 minutos
+# - Compute vulnerable: 10 minutos
+# - Oracle 23ai sin protecciones: 25-30 minutos
+# - Aplicación vulnerable: 10 minutos
+# - Configuración de vulnerabilidades: 5 minutos
+
+# ========================================
+# SIGUIENTE PASO: AMBIENTE SEGURO
+# ========================================
+
+# Después de desplegar este ambiente vulnerable:
+# 1. Ejecutar pruebas de vulnerabilidad
+# 2. Documentar todos los hallazgos
+# 3. Desplegar ambiente seguro para comparación
+# 4. Ejecutar mismas pruebas (deben fallar)
+# 5. Generar reporte comparativo
+# 6. Destruir ambos ambientes post-demo
+
+# ========================================
+# 🔥 RECORDATORIO FINAL 🔥
+# ========================================
+
+# Este ambiente está diseñado para FALLAR todas las pruebas de seguridad.
+# Es la demostración perfecta de "qué NO hacer" en la nube.
+# El contraste con el ambiente seguro será dramático e impactante.
+
+# ⚠️  DESTRUIR INMEDIATAMENTE DESPUÉS DE LA DEMO ⚠️

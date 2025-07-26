@@ -1,0 +1,68 @@
+# OCI Authentication Variables
+tenancy_ocid     = "ocid1.tenancy.oc1..aaaaaaaas..."
+user_ocid        = "ocid1.user.oc1..aaaaaaaa..."
+fingerprint      = "00:f9:d1:41:bb:57..."
+private_key_path = "/path/to/oci_api_key.pem"
+compartment_ocid = "ocid1.compartment.oc1..aaaaaaaas..."
+region           = "eu-frankfurt-1"
+
+# Customer Configuration
+cliente  = "empresa01"     # Nombre del cliente (solo minúsculas y números)
+octetoB  = "10"           # Segundo octeto para CIDR (10.X.0.0/16)
+
+# Database Configuration
+db_password = "MySecureP@ssw0rd123_#"  # Password must meet Oracle requirements
+
+# SSH Key Configuration (optional - if not provided, keys will be auto-generated)
+# ssh_key_pair_name = "mi_cliente_ssh_key"
+# ssh_public_key    = "ssh-rsa AAAAB3NzaC1yc2E..."
+
+# HTTPS Certificate Configuration (optional - for HTTPS support)
+# ca_certificate         = "-----BEGIN CERTIFICATE-----\nMII..."
+# certificate_passphrase = "certificate_password" 
+# certificate_private_key = "-----BEGIN PRIVATE KEY-----\nMII..."
+# public_certificate     = "-----BEGIN CERTIFICATE-----\nMII..."
+
+# Advanced Configuration (optional - defaults will be used)
+
+# DRG Route Propagation
+# enable_drg_propagation = true
+
+# Apache VM Shape Configuration
+# apache_shape_config = {
+#   ocpus         = 2
+#   memory_in_gbs = 16
+# }
+
+# Tomcat VM Shape Configuration
+# tomcat_shape_config = {
+#   ocpus         = 2
+#   memory_in_gbs = 16
+# }
+
+# Bastion VM Shape Configuration
+# bastion_shape_config = {
+#   ocpus         = 2
+#   memory_in_gbs = 16
+# }
+
+# Database System Shape Configuration
+# db_shape_config = {
+#   ocpus         = 2
+#   memory_in_gbs = 32
+# }
+
+# Database Storage Configuration
+# db_storage_config = {
+#   data_storage_size_in_gb  = 256
+#   total_storage_size_in_gb = 712
+# }
+
+# Load Balancer Configuration
+# lb_shape_config = {
+#   minimum_bandwidth_in_mbps = 10
+#   maximum_bandwidth_in_mbps = 100
+# }
+
+# WAF Configuration (habilitado por defecto para despliegue automático)
+enable_waf = true

@@ -1,0 +1,203 @@
+# ========================================
+# CONFIGURACIÓN PRINCIPAL OCI
+# ========================================
+
+# Credenciales OCI - REQUERIDAS
+tenancy_ocid     = "ocid1.tenancy.oc1..aaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+user_ocid        = "ocid1.user.oc1..aaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+fingerprint      = "xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx"
+private_key_path = "/path/to/your/oci_api_key.pem"
+region           = "us-ashburn-1"
+home_region      = "us-ashburn-1"
+
+# ========================================
+# CONFIGURACIÓN DEL AMBIENTE
+# ========================================
+
+# Nombre del ambiente
+environment = "security-showcase"
+
+# Tags comunes para todos los recursos
+common_tags = {
+  "Project"     = "SecurityShowcase"
+  "Owner"       = "SecurityTeam"
+  "Environment" = "Demo"
+  "CostCenter"  = "Security"
+}
+
+# ========================================
+# CONFIGURACIÓN DE RED
+# ========================================
+
+# CIDR principal para VCN
+vcn_cidr_block = "10.0.0.0/16"
+
+# ========================================
+# SEGURIDAD DE BASE DE DATOS - CRÍTICO
+# ========================================
+
+# 🔥 CARACTERÍSTICA PRINCIPAL: Oracle 23ai Database Firewall
+enable_database_firewall = true
+
+# Data Safe para monitoreo de base de datos
+enable_data_safe = true
+
+# Password de administrador de BD (debe cumplir requisitos de complejidad)
+db_admin_password = "SecureDBPassword123!"
+
+# Backup y alta disponibilidad
+enable_cross_region_backup = true
+backup_retention_days     = 30
+
+# ========================================
+# SEGURIDAD DE RED - WAF Y PROTECCIÓN
+# ========================================
+
+# Web Application Firewall
+enable_waf = true
+
+# Protección DDoS
+enable_ddos_protection = true
+
+# Dominios para WAF (opcional, para producción)
+waf_domain_names = ["secure-demo.company.com", "api-secure.company.com"]
+
+# Flow logs para monitoreo de tráfico
+enable_flow_logs = true
+
+# Bastion Service para acceso seguro
+enable_bastion_service = true
+
+# Geo-blocking (opcional)
+enable_geo_blocking = false
+
+# ========================================
+# MONITOREO Y ALERTAS - CLOUD GUARD
+# ========================================
+
+# 🛡️ Cloud Guard para detección de amenazas
+enable_cloud_guard = true
+
+# Escaneo de vulnerabilidades automatizado
+enable_vulnerability_scanning = true
+
+# Email para notificaciones de seguridad - REQUERIDO
+notification_email = "admin@company.com"
+
+# Retención de logs (días) - Para compliance
+log_retention_duration = 365
+
+# ========================================
+# IAM Y CONTROL DE ACCESO
+# ========================================
+
+# Forzar MFA para todos los usuarios
+enforce_mfa_requirements = true
+
+# Identity Domains (OCI IAM moderno)
+enable_identity_domains = false
+
+# ========================================
+# CONFIGURACIÓN DE COMPUTE
+# ========================================
+
+# Shape de instancias
+instance_shape = "VM.Standard.E4.Flex"
+
+# Cantidad de instancias por tier
+instance_count = 2
+
+# ========================================
+# COMPLIANCE Y REGULACIONES
+# ========================================
+
+# Frameworks de compliance a implementar
+compliance_frameworks = [
+  "PCI_DSS",
+  "SOX", 
+  "GDPR",
+  "ISO27001"
+]
+
+# ========================================
+# CONFIGURACIÓN AVANZADA - OPCIONAL
+# ========================================
+
+# Modo demo (habilita características adicionales para demostración)
+demo_mode = true
+
+# Configuración de monitoreo avanzado
+enable_apm = true
+apm_free_tier = true
+
+# Umbrales de alertas
+database_connection_threshold   = 50
+failed_login_threshold         = 10
+network_traffic_threshold_mbps = 100
+
+# ========================================
+# EJEMPLOS DE CONFIGURACIÓN POR AMBIENTE
+# ========================================
+
+# PARA DESARROLLO/DEMO:
+# - demo_mode = true
+# - apm_free_tier = true
+# - backup_retention_days = 7
+# - log_retention_duration = 90
+
+# PARA PRODUCCIÓN:
+# - demo_mode = false
+# - apm_free_tier = false  
+# - backup_retention_days = 365
+# - log_retention_duration = 2555 (7 años)
+# - enable_cross_region_backup = true
+
+# PARA ALTA SEGURIDAD:
+# - enforce_mfa_requirements = true
+# - enable_geo_blocking = true
+# - enable_vulnerability_scanning = true
+# - compliance_frameworks = ["PCI_DSS", "SOX", "GDPR", "ISO27001", "NIST"]
+
+# ========================================
+# NOTAS IMPORTANTES
+# ========================================
+
+# 1. CREDENCIALES OCI:
+#    - Obtener desde OCI Console > Identity > Users > API Keys
+#    - Guardar private key en ubicación segura
+#    - Configurar fingerprint correctamente
+
+# 2. REGIONES DISPONIBLES:
+#    - us-ashburn-1 (US East - Ashburn)
+#    - us-phoenix-1 (US West - Phoenix) 
+#    - eu-frankfurt-1 (Germany Central - Frankfurt)
+#    - ap-mumbai-1 (India West - Mumbai)
+#    - Verificar disponibilidad de servicios por región
+
+# 3. SHAPES RECOMENDADAS:
+#    - VM.Standard.E4.Flex (Flexible, moderno)
+#    - VM.Standard.E3.Flex (Más económico)
+#    - VM.Standard.A1.Flex (ARM, más eficiente)
+
+# 4. PASSWORDS:
+#    - Mínimo 12 caracteres
+#    - Incluir mayúsculas, minúsculas, números y símbolos
+#    - No usar palabras del diccionario
+
+# 5. NOTIFICACIONES:
+#    - notification_email debe ser válido y monitoreado
+#    - Configurar filtros para evitar spam de alertas
+
+# 6. COSTOS ESTIMADOS (USD/mes):
+#    - Ambiente básico: $300-500/mes
+#    - Con todas las características: $800-1200/mes
+#    - ROI: 92,500%+ si previene un incidente mayor
+
+# ========================================
+# VARIABLES SENSIBLES - NO COMMITEAR
+# ========================================
+
+# Para valores sensibles, usar variables de entorno:
+# export TF_VAR_db_admin_password="SecurePassword123!"
+# export TF_VAR_private_key_path="/secure/path/to/key.pem"
+# export TF_VAR_notification_email="admin@company.com"

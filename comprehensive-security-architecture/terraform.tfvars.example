@@ -1,0 +1,176 @@
+# ========================================
+# COMPREHENSIVE SECURITY ARCHITECTURE
+# TERRAFORM VARIABLES CONFIGURATION
+# ========================================
+
+# ========================================
+# OCI AUTHENTICATION (REQUIRED)
+# ========================================
+tenancy_ocid     = "ocid1.tenancy.oc1..example"
+user_ocid        = "ocid1.user.oc1..example"  
+fingerprint      = "xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx"
+private_key_path = "/home/jesmonsa/.oci/oci_api_key.pem"
+
+# ========================================
+# REGIONAL CONFIGURATION
+# ========================================
+region      = "us-ashburn-1"   # Primary deployment region
+home_region = "us-ashburn-1"   # Home region for identity operations
+
+# ========================================
+# ENVIRONMENT CONFIGURATION
+# ========================================
+environment = "dev"  # Options: dev, staging, prod
+
+# ========================================
+# IAM CONFIGURATION
+# ========================================
+create_compartments    = true  # Create compartment structure
+create_security_groups = true  # Create security user groups
+create_policies       = true  # Create IAM policies
+
+# ========================================
+# NETWORK CONFIGURATION
+# ========================================
+vcn_cidr_block   = "10.40.0.0/16"  # VCN CIDR block
+enable_flow_logs = true            # Enable VCN Flow Logs
+
+# ========================================
+# COMPUTE CONFIGURATION
+# ========================================
+instance_shape       = "VM.Standard.E4.Flex"  # Compute shape
+instance_count       = 2                       # Number of instances
+enable_os_hardening  = true                   # OS security hardening
+
+# ========================================
+# DATABASE CONFIGURATION
+# ========================================
+enable_database          = true   # Deploy Autonomous Database
+enable_data_safe         = true   # Enable Oracle Data Safe
+enable_vault_integration = true   # Vault integration for encryption
+
+# ========================================
+# VAULT/KMS CONFIGURATION
+# ========================================
+create_master_key = true  # Create master encryption key
+
+# ========================================
+# WAF CONFIGURATION
+# ========================================
+enable_waf = true  # Enable Web Application Firewall
+
+# WAF Domain configuration
+waf_domain_names = [
+  "comprehensive-security-demo.oracledemo.com"
+]
+
+# Origin servers (will be populated automatically from load balancer)
+waf_origin_servers = []
+
+# ========================================
+# MONITORING AND SECURITY
+# ========================================
+enable_cloud_guard    = true  # Enable Oracle Cloud Guard
+enable_audit_logging  = true  # Enable audit logging
+log_retention_duration = 90   # Days to retain logs
+
+# ========================================
+# SECURITY ZONES
+# ========================================
+enable_security_zones   = true  # Enable Security Zones
+security_zone_recipe_id = ""    # Leave empty to use default recipe
+
+# ========================================
+# ADDITIONAL SECURITY SERVICES
+# ========================================
+enable_bastion_service        = true  # Enable Bastion Service
+enable_vulnerability_scanning = true  # Enable Vulnerability Scanning
+
+# ========================================
+# NOTIFICATIONS
+# ========================================
+notification_email = "security-team@yourcompany.com"  # Email for security notifications
+
+# ========================================
+# ADVANCED CONFIGURATION OPTIONS
+# ========================================
+
+## Compute Instance Configuration
+# Uncomment and modify as needed:
+# instance_shape_config = {
+#   memory_in_gbs = 16
+#   ocpus        = 2
+# }
+
+## Network Security Groups
+# Additional NSG rules can be defined in modules/network/main.tf
+
+## Database Advanced Settings
+# Uncomment for production environments:
+# db_version = "19c"
+# db_workload_type = "OLTP"
+# is_auto_scaling_enabled = true
+
+## WAF Advanced Protection Rules
+# Custom WAF rules can be defined in modules/waf/main.tf
+
+## Cloud Guard Advanced Configuration
+# Custom detector recipes can be defined in modules/monitoring/main.tf
+
+## Backup and Recovery Settings
+# backup_retention_period = 30
+# enable_cross_region_backup = true
+
+# ========================================
+# DEMO SPECIFIC CONFIGURATION
+# ========================================
+
+## Demo Environment Settings
+# For demonstration purposes, you might want to:
+# - Reduce instance count to minimize costs
+# - Enable all security features for showcase
+# - Use smaller database configuration
+
+# demo_mode = true  # Uncomment for cost-optimized demo deployment
+
+# ========================================
+# COST OPTIMIZATION NOTES
+# ========================================
+
+# For cost optimization in non-production environments:
+# 1. Use smaller compute shapes (VM.Standard.E4.Flex with 1 OCPU)
+# 2. Reduce instance count to 1
+# 3. Use Always Free Autonomous Database if available
+# 4. Disable unnecessary services during development
+
+# For production environments:
+# 1. Enable all security features
+# 2. Use appropriate instance sizing
+# 3. Enable cross-region backup
+# 4. Configure high availability
+
+# ========================================
+# DEPLOYMENT NOTES
+# ========================================
+
+# Initial deployment time: 60-90 minutes
+# - Compartment and IAM setup: 5 minutes
+# - Network infrastructure: 10 minutes  
+# - Vault and KMS: 15 minutes
+# - Compute instances: 10 minutes
+# - Autonomous Database: 20-30 minutes
+# - WAF configuration: 10 minutes
+# - Cloud Guard and monitoring: 10 minutes
+
+# Prerequisites:
+# 1. OCI CLI configured with proper permissions
+# 2. Terraform >= 1.4.0 installed
+# 3. User must have tenancy administrator permissions for initial setup
+# 4. Appropriate service limits in target region
+
+# Security considerations:
+# 1. This configuration creates a comprehensive security posture
+# 2. All data encryption uses customer-managed keys
+# 3. Network traffic is monitored and logged
+# 4. Security zones enforce additional compliance controls
+# 5. Regular security assessments are automated through Cloud Guard

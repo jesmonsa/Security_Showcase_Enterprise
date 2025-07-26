@@ -1,0 +1,274 @@
+#cloud-config
+# ========================================
+# CLOUD-INIT VULNERABLE - CONFIGURACIÓN INSEGURA
+# Este script instala DELIBERADAMENTE configuraciones inseguras
+# ========================================
+
+# INSEGURO: Habilitar password authentication si se solicita
+ssh_pwauth: ${enable_password_auth}
+
+# INSEGURO: Configurar passwords débiles para usuarios
+chpasswd:
+  list: |
+    root:Welcome123!
+    opc:Welcome123!
+  expire: false
+
+# INSEGURO: Habilitar root login
+disable_root: false
+
+# Usuarios con configuración insegura
+users:
+  - name: vulnerable
+    sudo: ALL=(ALL) NOPASSWD:ALL  # PELIGROSO: sudo sin password
+    shell: /bin/bash
+    passwd: $6$rounds=4096$salt$3xIFmdEt8/Zd7C1Uq1qP1Q$  # Password: password123
+  - name: admin
+    sudo: ALL=(ALL) NOPASSWD:ALL  # PELIGROSO: otro usuario con sudo sin password
+    shell: /bin/bash
+
+# Packages a instalar (algunos intencionalmente vulnerables)
+packages:
+  - httpd
+  - php
+  - php-mysqli
+  - mariadb-server
+  - net-tools
+  - telnet
+  - ftp
+  - vsftpd
+  - openssh-server
+  - curl
+  - wget
+  - git
+  - unzip
+  # INSEGURO: Versiones antiguas si están disponibles
+  - openssl1.1  # Versión más antigua de OpenSSL
+
+# INSEGURO: Deshabilitar SELinux
+bootcmd:
+  - setenforce 0
+  - sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
+
+runcmd:
+  # ========================================
+  # CONFIGURACIÓN INSEGURA DEL SISTEMA
+  # ========================================
+  
+  # INSEGURO: Deshabilitar firewall
+  - systemctl stop firewalld
+  - systemctl disable firewalld
+  
+  # INSEGURO: Configurar SSH con opciones inseguras
+  - sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/' /etc/ssh/sshd_config
+  - sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+  - sed -i 's/#PermitEmptyPasswords no/PermitEmptyPasswords yes/' /etc/ssh/sshd_config
+  - echo "Protocol 2,1" >> /etc/ssh/sshd_config  # INSEGURO: Permitir protocolo SSH v1
+  - systemctl restart sshd
+  
+  # INSEGURO: Configurar servicios con configuración por defecto
+  - systemctl enable httpd
+  - systemctl start httpd
+  - systemctl enable vsftpd
+  - systemctl start vsftpd
+  
+  # ========================================
+  # APLICACIÓN WEB VULNERABLE
+  # ========================================
+  
+  # Crear aplicación PHP vulnerable
+  - |
+    cat > /var/www/html/index.php << 'EOF'
+    <?php
+    // APLICACIÓN DELIBERADAMENTE VULNERABLE PARA DEMO
+    echo "<h1>Vulnerable Web Application Demo</h1>";
+    echo "<p>Environment: Vulnerable (Without Security Controls)</p>";
+    
+    // VULNERABLE: SQL Injection sin protección
+    if (isset($_GET['demo']) && $_GET['demo'] == 'sql') {
+        $user_id = $_GET['user_id'];
+        // PELIGROSO: Query sin sanitización
+        echo "<h2>SQL Injection Test</h2>";
+        echo "<p>Query: SELECT * FROM users WHERE id = '$user_id'</p>";
+        if (strpos($user_id, "'") !== false) {
+            echo "<p style='color: red;'><strong>PATRÓN DE SQL INJECTION DETECTADO</strong></p>";
+            echo "<p>En un ambiente real, esto podría comprometer la base de datos completa.</p>";
+        }
+    }
+    
+    // VULNERABLE: XSS sin filtrado
+    if (isset($_GET['demo']) && $_GET['demo'] == 'xss') {
+        $comment = $_GET['comment'];
+        echo "<h2>XSS Test</h2>";
+        echo "<p>Comentario ingresado: " . $comment . "</p>";  // PELIGROSO: Sin escape
+        if (strpos($comment, 'script') !== false) {
+            echo "<p style='color: red;'><strong>PATRÓN XSS DETECTADO</strong></p>";
+            echo "<p>En un ambiente real, esto podría ejecutar JavaScript malicioso.</p>";
+        }
+    }
+    
+    // VULNERABLE: Path Traversal
+    if (isset($_GET['demo']) && $_GET['demo'] == 'path') {
+        $file = $_GET['file'];
+        echo "<h2>Path Traversal Test</h2>";
+        echo "<p>Archivo solicitado: $file</p>";
+        if (strpos($file, '../') !== false) {
+            echo "<p style='color: red;'><strong>PATRÓN DE DIRECTORY TRAVERSAL DETECTADO</strong></p>";
+            echo "<p>En un ambiente real, esto podría exponer archivos críticos del sistema.</p>";
+        }
+    }
+    
+    // INSEGURO: Mostrar información del sistema
+    echo "<h2>System Information (INSECURE DISCLOSURE)</h2>";
+    echo "<p>PHP Version: " . phpversion() . "</p>";
+    echo "<p>Server Software: " . $_SERVER['SERVER_SOFTWARE'] . "</p>";
+    echo "<p>Document Root: " . $_SERVER['DOCUMENT_ROOT'] . "</p>";
+    
+    // INSEGURO: Mostrar variables de entorno
+    echo "<h3>Environment Variables (SENSITIVE DATA EXPOSURE)</h3>";
+    echo "<pre>";
+    print_r($_ENV);
+    echo "</pre>";
+    
+    ?>
+    EOF
+  
+  # INSEGURO: Configurar PHP con opciones inseguras
+  - sed -i 's/expose_php = Off/expose_php = On/' /etc/php.ini
+  - sed -i 's/display_errors = Off/display_errors = On/' /etc/php.ini
+  - sed -i 's/log_errors = On/log_errors = Off/' /etc/php.ini
+  - sed -i 's/allow_url_fopen = Off/allow_url_fopen = On/' /etc/php.ini
+  - sed -i 's/allow_url_include = Off/allow_url_include = On/' /etc/php.ini
+  
+  # ========================================
+  # INSTALACIÓN DE SOFTWARE VULNERABLE
+  # ========================================
+  
+  %{ if install_vulnerable_apps }
+  # INSEGURO: Instalar versiones vulnerables conocidas
+  - wget -O /var/www/html/phpinfo.php -q --no-check-certificate "https://raw.githubusercontent.com/tennc/webshell/master/php/phpinfo.php" || true
+  
+  # INSEGURO: Configurar servicios adicionales vulnerables
+  - |
+    cat > /var/www/html/test.php << 'EOF'
+    <?php
+    // INSEGURO: Permitir ejecución de comandos (para demo)
+    if (isset($_GET['cmd'])) {
+        echo "<pre>";
+        system($_GET['cmd']);  // EXTREMADAMENTE PELIGROSO
+        echo "</pre>";
+    }
+    ?>
+    EOF
+  %{ endif }
+  
+  # ========================================
+  # CONFIGURACIÓN DE LOGS INSEGURA
+  # ========================================
+  
+  # INSEGURO: Configurar logs con información sensible
+  - echo "LogLevel debug" >> /etc/httpd/conf/httpd.conf
+  - echo "ServerTokens Full" >> /etc/httpd/conf/httpd.conf
+  - echo "ServerSignature On" >> /etc/httpd/conf/httpd.conf
+  
+  # ========================================
+  # DESHABILITAR ACTUALIZACIONES AUTOMÁTICAS
+  # ========================================
+  
+  %{ if disable_os_hardening }
+  # PELIGROSO: Deshabilitar actualizaciones automáticas
+  - systemctl stop dnf-automatic.timer
+  - systemctl disable dnf-automatic.timer
+  - systemctl mask dnf-automatic.timer
+  
+  # INSEGURO: Configurar repositorios sin verificación GPG
+  - sed -i 's/gpgcheck=1/gpgcheck=0/' /etc/yum.repos.d/*.repo
+  %{ endif }
+  
+  # ========================================
+  # CONFIGURACIÓN FINAL INSEGURA
+  # ========================================
+  
+  # Restart servicios con configuración insegura
+  - systemctl restart httpd
+  - systemctl restart sshd
+  
+  # INSEGURO: Crear archivo con credenciales expuestas
+  - |
+    cat > /home/opc/credentials.txt << 'EOF'
+    # CREDENTIALS FILE - INSECURE STORAGE
+    Database Connection: ${database_connection}
+    Admin Password: Welcome123!
+    API Key: ak-demo-12345-insecure-key
+    Secret Token: st-demo-abcdef-insecure-token
+    EOF
+  - chmod 644 /home/opc/credentials.txt  # INSEGURO: Legible por todos
+  
+  # INSEGURO: Crear archivo de configuración con secretos
+  - echo "DB_PASSWORD=Welcome123!" >> /var/www/html/.env
+  - echo "API_SECRET=very-secret-key-123" >> /var/www/html/.env
+  - chmod 644 /var/www/html/.env  # INSEGURO: Accesible vía web
+  
+  # Log de finalización
+  - echo "VULNERABLE CONFIGURATION COMPLETED - $(date)" >> /var/log/vulnerable-setup.log
+  - echo "WARNING: This system is INTENTIONALLY INSECURE for demonstration purposes" >> /var/log/vulnerable-setup.log
+
+# ========================================
+# ARCHIVOS ADICIONALES INSEGUROS
+# ========================================
+
+write_files:
+  # INSEGURO: Archivo de configuración con secretos
+  - path: /etc/vulnerable-config.conf
+    content: |
+      # VULNERABLE CONFIGURATION FILE
+      database_password=Welcome123!
+      api_key=ak-demo-12345-insecure
+      secret_token=st-demo-abcdef-insecure
+      admin_email=admin@vulnerable-demo.com
+      debug_mode=true
+      log_sensitive_data=true
+    permissions: '0644'  # INSEGURO: Legible por todos
+  
+  # INSEGURO: Script con credenciales hardcodeadas
+  - path: /home/opc/backup-script.sh
+    content: |
+      #!/bin/bash
+      # INSECURE BACKUP SCRIPT
+      DB_USER="admin"
+      DB_PASS="Welcome123!"  # HARDCODED PASSWORD
+      API_KEY="ak-demo-12345-insecure"
+      
+      echo "Starting backup with hardcoded credentials..."
+      # Este script simula operaciones con credenciales expuestas
+    permissions: '0755'
+  
+  # INSEGURO: Archivo de log que expondrá información sensible
+  - path: /var/log/vulnerable-app.log
+    content: |
+      [VULNERABLE APP LOG - INTENTIONALLY INSECURE]
+      $(date): Application started with debug mode enabled
+      $(date): Database connection: ${database_connection}
+      $(date): Admin password logged in plaintext: Welcome123!
+      $(date): API keys will be logged in this file
+    permissions: '0644'
+
+# Configuración final
+final_message: |
+  ========================================
+  VULNERABLE ENVIRONMENT SETUP COMPLETE
+  ========================================
+  
+  WARNING: This system is INTENTIONALLY INSECURE
+  - Password authentication enabled
+  - Root login allowed
+  - Firewall disabled
+  - SELinux disabled
+  - Vulnerable web application installed
+  - Credentials stored in plaintext
+  - Debug mode enabled
+  
+  This configuration should NEVER be used in production!
+  For demonstration and security training purposes only.
+  
+  ========================================

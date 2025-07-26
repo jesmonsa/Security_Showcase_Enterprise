@@ -1,0 +1,281 @@
+# Copyright (c) 2024, Oracle and/or its affiliates. All rights reserved.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+
+title: "Arquitectura de Referencia FSC - Apache, Tomcat y Oracle Database"
+description: "Stack empresarial completo con Apache (VM.Standard.E5.Flex), Tomcat (VM.Standard.E5.Flex), Oracle Database High Performance (712GB storage), Load Balancer flexible, WAF Edge, y Network Security Groups con microsegmentación."
+stackDescription: "Arquitectura de referencia FSC que despliega una aplicación de 3 capas segura en Oracle Cloud Infrastructure con Apache, Tomcat, y Oracle Database, incluyendo Load Balancer, WAF Edge, y almacenamiento compartido."
+schemaVersion: 1.1.0
+version: "20241201"
+locale: "es"
+
+variableGroups:
+- title: "Configuración General"
+  visible: false
+  variables:
+  - tenancy_ocid
+  - region
+
+- title: "Configuración Requerida"
+  visible: true  
+  variables:
+  - compartment_ocid
+  - cliente
+  - octetoB
+  - db_password
+  - show_advanced 
+
+- title: "Configuración de SSH (Opcional)"
+  visible: 
+      and:
+        - show_advanced
+  variables:
+  - ssh_key_pair_name
+  - ssh_public_key
+
+- title: "Configuración HTTPS (Opcional)"
+  visible: 
+      and:
+        - show_advanced
+  variables:
+  - ca_certificate
+  - certificate_passphrase
+  - certificate_private_key
+  - public_certificate
+
+- title: "Configuración Avanzada - Shapes"
+  visible: 
+      and:
+        - show_advanced
+  variables:
+  - apache_shape_config
+  - tomcat_shape_config
+  - bastion_shape_config
+  - db_shape_config
+
+- title: "Configuración Avanzada - Almacenamiento y Red"
+  visible: 
+      and:
+        - show_advanced
+  variables:
+  - db_storage_config
+  - lb_shape_config
+  - enable_drg_propagation
+
+variables:
+
+# Required Configuration
+  compartment_ocid:
+    type: oci:identity:compartment:id
+    required: true
+    title: "Compartment"
+    description: "Compartment donde se crearán los recursos"
+
+  cliente:
+    type: string
+    required: true
+    title: "Nombre del Cliente"
+    description: "Identificador del cliente (solo minúsculas y números)"
+    pattern: "^[a-z][a-z0-9]*$"
+
+  octetoB:
+    type: string
+    required: true  
+    title: "Segundo Octeto de Red"
+    description: "Segundo octeto para CIDR de VCN (10.X.0.0/16)"
+    pattern: "^([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$"
+
+  db_password:
+    type: password
+    required: true
+    title: "Contraseña de Database"
+    description: "Contraseña para el usuario admin de Oracle Database (9-30 caracteres, ≥2 mayúsculas, ≥2 minúsculas, ≥2 números, ≥2 caracteres especiales _#-)"
+    confirmation: true
+
+  show_advanced:
+    type: boolean
+    title: "Mostrar Configuración Avanzada"
+    description: "Muestra opciones avanzadas de configuración"
+    visible: true
+    default: false
+
+# SSH Configuration
+  ssh_key_pair_name:
+    type: string
+    title: "Nombre del Par de Claves SSH"
+    description: "Nombre para el archivo de claves SSH (opcional)"
+    required: false
+
+  ssh_public_key:
+    type: oci:core:ssh:publickey
+    title: "Clave Pública SSH"
+    description: "Clave SSH pública personalizada (opcional)"
+    required: false
+    additionalProps:
+      allowMultiple: true
+
+# Certificate Configuration  
+  ca_certificate:
+    type: text
+    title: "Certificado CA"
+    description: "Certificado de la Autoridad Certificadora"
+    required: false
+
+  certificate_passphrase:
+    type: password
+    title: "Passphrase del Certificado" 
+    description: "Contraseña para la clave privada del certificado"
+    required: false
+
+  certificate_private_key:
+    type: text
+    title: "Clave Privada del Certificado"
+    description: "Clave privada del certificado SSL"
+    required: false
+
+  public_certificate:
+    type: text
+    title: "Certificado Público"
+    description: "Certificado público SSL"
+    required: false
+
+# Advanced Shape Configuration
+  apache_shape_config:
+    type: object
+    title: "Configuración Apache VM"
+    description: "Configuración de recursos para Apache Server"
+    default:
+      ocpus: 2
+      memory_in_gbs: 16
+    properties:
+      ocpus:
+        type: integer
+        minimum: 1
+        maximum: 64
+        title: "OCPUs"
+      memory_in_gbs:
+        type: integer
+        minimum: 1
+        maximum: 1024
+        title: "Memoria (GB)"
+
+  tomcat_shape_config:
+    type: object
+    title: "Configuración Tomcat VM"
+    description: "Configuración de recursos para Tomcat Server"
+    default:
+      ocpus: 2
+      memory_in_gbs: 16
+    properties:
+      ocpus:
+        type: integer
+        minimum: 1
+        maximum: 64
+        title: "OCPUs"
+      memory_in_gbs:
+        type: integer
+        minimum: 1
+        maximum: 1024
+        title: "Memoria (GB)"
+
+  bastion_shape_config:
+    type: object
+    title: "Configuración Bastion VM"
+    description: "Configuración de recursos para Bastion Host"
+    default:
+      ocpus: 2
+      memory_in_gbs: 16
+    properties:
+      ocpus:
+        type: integer
+        minimum: 1
+        maximum: 64
+        title: "OCPUs"
+      memory_in_gbs:
+        type: integer
+        minimum: 1
+        maximum: 1024
+        title: "Memoria (GB)"
+
+  db_shape_config:
+    type: object
+    title: "Configuración Database System"
+    description: "Configuración de recursos para Oracle Database"
+    default:
+      ocpus: 2
+      memory_in_gbs: 32
+    properties:
+      ocpus:
+        type: integer
+        minimum: 1
+        maximum: 128
+        title: "OCPUs"
+      memory_in_gbs:
+        type: integer
+        minimum: 1
+        maximum: 2048
+        title: "Memoria (GB)"
+
+  db_storage_config:
+    type: object
+    title: "Configuración de Almacenamiento DB"
+    description: "Configuración de almacenamiento para Oracle Database"
+    default:
+      data_storage_size_in_gb: 256
+      total_storage_size_in_gb: 712
+    properties:
+      data_storage_size_in_gb:
+        type: integer
+        minimum: 256
+        maximum: 40960
+        title: "Almacenamiento de Datos (GB)"
+      total_storage_size_in_gb:
+        type: integer
+        minimum: 256
+        maximum: 40960
+        title: "Almacenamiento Total (GB)"
+
+  lb_shape_config:
+    type: object
+    title: "Configuración Load Balancer"
+    description: "Configuración de ancho de banda para Load Balancer"
+    default:
+      minimum_bandwidth_in_mbps: 10
+      maximum_bandwidth_in_mbps: 100
+    properties:
+      minimum_bandwidth_in_mbps:
+        type: integer
+        minimum: 10
+        maximum: 8000
+        title: "Ancho de Banda Mínimo (Mbps)"
+      maximum_bandwidth_in_mbps:
+        type: integer
+        minimum: 10
+        maximum: 8000
+        title: "Ancho de Banda Máximo (Mbps)"
+
+  enable_drg_propagation:
+    type: boolean
+    title: "Habilitar Propagación DRG"
+    description: "Habilitar propagación de rutas del DRG"
+    default: true
+
+outputs:
+  architecture_summary:
+    title: "Resumen de Arquitectura"
+    description: "Información resumida de la arquitectura desplegada"
+    type: copyableString
+
+  connection_info:
+    title: "Información de Conexión"
+    description: "Comandos y URLs para acceder a los servicios"
+    type: copyableString
+
+  load_balancer_fqdn:
+    title: "IP del Load Balancer"
+    description: "Dirección IP pública del Load Balancer"
+    type: copyableString
+
+  ssh_public_key:
+    title: "Clave SSH Pública Generada"
+    description: "Clave SSH pública generada automáticamente"
+    type: copyableString

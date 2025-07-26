@@ -1,0 +1,255 @@
+# ========================================
+# TERRAFORM SENSITIVE FILES
+# ========================================
+
+# Terraform state files (contienen datos sensibles)
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+# Terraform variable files (pueden contener credenciales)
+terraform.tfvars
+*.auto.tfvars
+*.auto.tfvars.json
+terraform.tfvars.json
+
+# Terraform plan files (pueden contener datos sensibles)
+*.tfplan
+*.tfplan.*
+
+# Terraform CLI configuration files
+.terraformrc
+terraform.rc
+
+# Terraform crash log files
+crash.log
+crash.*.log
+
+# ========================================
+# OCI CREDENTIALS Y KEYS
+# ========================================
+
+# OCI private keys
+*.pem
+*.key
+oci_api_key*
+*_private_key*
+
+# OCI configuration files
+.oci/
+config
+
+# SSH keys generadas
+*_rsa
+*_rsa.pub
+*.ppk
+
+# Wallets de base de datos
+wallet/
+Wallet_*/
+*wallet*
+tnsnames.ora
+sqlnet.ora
+cwallet.sso
+ewallet.p12
+
+# ========================================
+# ARCHIVOS DE CONFIGURACIÓN SENSIBLES
+# ========================================
+
+# Environment files
+.env
+.env.*
+*.env
+
+# Setup scripts con credenciales
+setup_oci_tf_vars.sh
+*_credentials*
+*_secrets*
+
+# Archivos de configuración específicos
+local.tf
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# ========================================
+# LOGS Y ARCHIVOS TEMPORALES
+# ========================================
+
+# Terraform logs
+*.log
+terraform.log*
+
+# Debug files
+debug.log
+.terraform.lock.hcl.backup
+
+# Temporary files
+*.tmp
+*.temp
+*~
+.DS_Store
+Thumbs.db
+
+# ========================================
+# DIRECTORIOS DE TERRAFORM
+# ========================================
+
+# Terraform directories
+.terraform/
+.terraform.lock.hcl
+
+# Terraform modules cache
+.terraform.modules/
+
+# ========================================
+# ARCHIVOS DE BACKUP Y RECOVERY
+# ========================================
+
+# Backup files
+*.bak
+*.backup
+*.old
+*_backup
+
+# Recovery files
+*.orig
+*.rej
+
+# ========================================
+# ARCHIVOS ESPECÍFICOS DEL PROYECTO
+# ========================================
+
+# Archivos de prueba con datos reales
+test_data/
+testing/
+*_test.tf
+
+# Documentos con información sensible
+sensitive_docs/
+credentials_doc*
+*_passwords*
+
+# Reportes con información confidencial
+reports/private/
+audit_reports/
+compliance_reports/private/
+
+# ========================================
+# HERRAMIENTAS DE DESARROLLO
+# ========================================
+
+# IDE files
+.vscode/settings.json
+.vscode/launch.json
+.idea/
+*.swp
+*.swo
+*~
+
+# Local development
+local/
+dev/
+development/
+
+# ========================================
+# ARCHIVOS DEL SISTEMA OPERATIVO
+# ========================================
+
+# Windows
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ========================================
+# ARCHIVOS DE MONITOREO Y ALERTAS
+# ========================================
+
+# Archivos con tokens de API
+*_token*
+*_api_key*
+webhook_urls*
+
+# Configuraciones de alertas con emails
+notification_config*
+alert_emails*
+
+# ========================================
+# ARCHIVOS ESPECÍFICOS DE SEGURIDAD
+# ========================================
+
+# Archivos de configuración con passwords
+*password*
+*secret*
+*credential*
+
+# Certificados y llaves SSL/TLS
+*.crt
+*.csr
+*.p12
+*.pfx
+
+# Archivos de configuración de firewall
+firewall_rules_*
+security_groups_private*
+
+# ========================================
+# EXCEPTIONS - ARCHIVOS A INCLUIR
+# ========================================
+
+# Permitir archivos example/template
+!*.example
+!*_template*
+!terraform.tfvars.example
+
+# Permitir archivos de documentación
+!README*.md
+!DEPLOYMENT*.md
+!*.md
+
+# Permitir archivos de configuración públicos
+!.gitignore
+!.gitattributes
+
+# ========================================
+# NOTAS IMPORTANTES
+# ========================================
+
+# Este .gitignore está diseñado para:
+# 1. Proteger credenciales OCI
+# 2. Evitar filtrar state files de Terraform
+# 3. Proteger información sensible de base de datos
+# 4. Mantener la seguridad del proyecto
+# 5. Permitir archivos template y documentación
+
+# NUNCA remover las reglas de seguridad marcadas como críticas
+# SIEMPRE revisar antes de hacer commit de archivos sensibles
