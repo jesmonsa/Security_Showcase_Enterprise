@@ -1,0 +1,77 @@
+# ========================================
+# CREDENCIALES OCI — REEMPLAZA CON TUS VALORES REALES
+# ⚠️  NUNCA commitear este archivo con valores reales
+# ⚠️  Copia como terraform-CON-WAF.tfvars (ignorado por .gitignore)
+# ========================================
+tenancy_ocid     = "ocid1.tenancy.oc1..REEMPLAZA_CON_TU_TENANCY_OCID"
+user_ocid        = "ocid1.user.oc1..REEMPLAZA_CON_TU_USER_OCID"
+fingerprint      = "xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx"
+private_key_path = "/home/TU_USUARIO/.oci/oci_api_key.pem"
+region           = "us-ashburn-1"
+compartment_ocid = "ocid1.compartment.oc1..REEMPLAZA_CON_TU_COMPARTMENT_OCID"
+
+# ========================================
+# CONFIGURACIÓN DE SHOWCASE EMPRESARIAL
+# CON SEGURIDAD COMPLETA (WAF + CLOUD GUARD)
+# ========================================
+# Esta configuración muestra la aplicación CON protección completa
+# para demostrar las capacidades de seguridad de OCI
+
+# Información del cliente
+cliente = "wafshowcase"
+octetoB = "25"
+
+# SEGURIDAD WAF HABILITADA
+enable_waf         = true
+enable_cloud_guard = false
+
+# Base de datos — usa una contraseña segura y única
+db_password      = "REEMPLAZA_CON_PASSWORD_SEGURA_Min12Chars#"
+db_name          = "WAFDB01"
+db_pdb_name      = "WAFPDB01"
+db_node_hostname = "wafdb"
+
+# Configuración de shapes (optimizada para demo)
+apache_shape_config = {
+  ocpus         = 1
+  memory_in_gbs = 8
+}
+
+tomcat_shape_config = {
+  ocpus         = 1
+  memory_in_gbs = 8
+}
+
+bastion_shape_config = {
+  ocpus         = 1
+  memory_in_gbs = 8
+}
+
+db_shape_config = {
+  ocpus         = 1
+  memory_in_gbs = 16
+}
+
+# Load Balancer (configuración mínima para demo)
+lb_shape_config = {
+  minimum_bandwidth_in_mbps = 10
+  maximum_bandwidth_in_mbps = 50
+}
+
+# Storage (configuración mínima)
+db_storage_config = {
+  data_storage_size_in_gb  = 256
+  total_storage_size_in_gb = 512
+}
+
+# Configuración de red
+enable_drg_propagation = true
+
+# ========================================
+# INSTRUCCIONES DE USO
+# ========================================
+# 1. Copia este archivo: cp terraform-CON-WAF.tfvars.example terraform-CON-WAF.tfvars
+# 2. Reemplaza todos los valores marcados con REEMPLAZA_CON_...
+# 3. Obtén tus OCIDs en: OCI Console → Profile → Tenancy
+# 4. Genera tu API Key en: OCI Console → Identity → Users → API Keys
+# 5. NUNCA hagas git add de terraform-CON-WAF.tfvars (está en .gitignore)
