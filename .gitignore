@@ -8,10 +8,16 @@
 *.tfstate.backup
 
 # Terraform variable files (pueden contener credenciales)
-terraform.tfvars
+# CRITICO: Bloquear TODOS los .tfvars reales, solo permitir .example
+*.tfvars
+*.tfvars.json
 *.auto.tfvars
 *.auto.tfvars.json
 terraform.tfvars.json
+
+# Archivos tfvars con nombres específicos de este proyecto
+terraform-CON-WAF.tfvars
+terraform-SIN-WAF.tfvars
 
 # Terraform plan files (pueden contener datos sensibles)
 *.tfplan
@@ -166,6 +172,7 @@ ehthumbs_vista.db
 $RECYCLE.BIN/
 
 # macOS
+.DS_Store
 .AppleDouble
 .LSOverride
 Icon
@@ -245,11 +252,12 @@ security_groups_private*
 # ========================================
 
 # Este .gitignore está diseñado para:
-# 1. Proteger credenciales OCI
+# 1. Proteger credenciales OCI (tenancy_ocid, user_ocid, fingerprint, private_key_path)
 # 2. Evitar filtrar state files de Terraform
-# 3. Proteger información sensible de base de datos
+# 3. Proteger información sensible de base de datos (db_password)
 # 4. Mantener la seguridad del proyecto
 # 5. Permitir archivos template y documentación
 
+# REGLA DE ORO: NUNCA commitear *.tfvars reales. Siempre usar *.tfvars.example
 # NUNCA remover las reglas de seguridad marcadas como críticas
 # SIEMPRE revisar antes de hacer commit de archivos sensibles
