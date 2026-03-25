@@ -1,0 +1,30 @@
+# ============================================================
+# CODEOWNERS — Control de acceso a archivos sensibles
+# Los archivos listados aquí requieren aprobación explícita
+# del propietario antes de poder hacer merge.
+# Documentación: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+# ============================================================
+
+# Propietario por defecto de todo el repositorio
+* @jesmonsa
+
+# Archivos de credenciales y configuración sensible
+*.tfvars            @jesmonsa
+*.tfvars.example    @jesmonsa
+*.pem               @jesmonsa
+*.key               @jesmonsa
+.oci/               @jesmonsa
+
+# Workflows de GitHub Actions
+.github/            @jesmonsa
+.github/workflows/  @jesmonsa
+
+# Archivos Terraform críticos
+provider.tf         @jesmonsa
+variables.tf        @jesmonsa
+
+# Scripts de despliegue
+*.sh                @jesmonsa
+*.ps1               @jesmonsa
+deploy-*.sh         @jesmonsa
+cleanup-*.sh        @jesmonsa
